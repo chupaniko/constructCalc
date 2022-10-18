@@ -1,9 +1,13 @@
 import React from "react";
 import "./App.scss";
+import {RouterProvider} from "react-router";
+import AuthPage from "./components/AuthPage/AuthPage";
+import {createBrowserRouter} from "react-router-dom";
 
-function App() {
-    return (
-        <div className="App">
+const router = createBrowserRouter([
+    {
+        path: "/",
+        element: <div className="App">
             <header className="App-header">
                 <p>
                     Edit <code>src/App.js</code> and save to reload.
@@ -17,7 +21,17 @@ function App() {
                     Learn React
                 </a>
             </header>
-        </div>
+        </div>,
+    },
+    {
+        path: "/login",
+        element: <AuthPage/>,
+    },
+]);
+
+function App() {
+    return (
+        <RouterProvider router={router}/>
     );
 }
 
