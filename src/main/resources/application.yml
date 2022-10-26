@@ -1,4 +1,5 @@
 server:
+  port: 6579
   error:
     include-message: always
     include-binding-errors: always
@@ -6,9 +7,9 @@ server:
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/calculation
-    username:
-    password:
-  #    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: create-drop
@@ -17,4 +18,4 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
     show-sql: true
-#    database: postgresql
+    database: postgresql
