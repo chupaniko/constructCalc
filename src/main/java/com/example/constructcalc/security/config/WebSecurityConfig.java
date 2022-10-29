@@ -23,7 +23,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeRequests().antMatchers(
                 "/api/helloworld/**",
-                "/api/authentication/**"
+                "/api/authentication/**",
+                "/api/clients/**" //TODO костыль на первое время!!!
         ).permitAll().anyRequest().authenticated().and().formLogin();
     }
 
