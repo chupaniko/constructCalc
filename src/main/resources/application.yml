@@ -6,8 +6,8 @@ server:
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/calculation
-    username:
-    password:
+    username: postgres
+    password: n0n4cann0n
   #    driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
