@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Card, Heading, Pane, TextInputField } from "evergreen-ui";
-import BuildingImage from "./building.jpg";
-import logo from "../../../assets/logo.png";
+import BuildingImage from "../../assets/building.jpg";
+import logo from "../../assets/logo.png";
 
 const AuthPage = () => {
   const [login, setLogin] = React.useState("");
@@ -27,7 +27,7 @@ const AuthPage = () => {
           backgroundImage={`url(${BuildingImage})`}
           borderBottomLeftRadius={16}
           borderTopLeftRadius={16}
-        ></Pane>
+        />
 
         <Pane
           display="flex"

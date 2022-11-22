@@ -1,14 +1,16 @@
 html, body, #root {
   height: 100%;
+  width: 100%;
 }
 
 .app {
-  height: 100%;
-  width: 100%;
   background: #F0F4F8;
+  overflow: scroll;
 }
 
 .container {
-  width: 1240px;
+  width: 1064px;
+  min-width: 1024px;
   margin: 0 auto;
+  padding: 0 20px;
 }

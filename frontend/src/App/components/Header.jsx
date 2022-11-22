@@ -1,10 +1,10 @@
 import { Heading, Pane } from "evergreen-ui";
-import logo from "../../../assets/logo.png";
+import logo from "../../assets/logo.png";
 
 const Header = () => {
   return (
     <header>
-      <Pane backgroundColor="white" elevation={1}>
+      <Pane backgroundColor="white" elevation={1} marginBottom={40}>
         <Pane
           className="container"
           display="flex"
