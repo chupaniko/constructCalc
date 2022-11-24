@@ -12,6 +12,10 @@ export const apiCreateClient = (data) => {
   return instance.post("/clients/save", data);
 };
 
+export const apiGetClient = (id) => {
+  return instance.get(`/clients/byId/${id}`);
+};
+
 export const apiAuth = (data) => {
   return instance.post("/authentication", data);
 }

@@ -4,6 +4,8 @@ html, body, #root {
 }
 
 .app {
+  display: flex;
+  flex-direction: column;
   background: #F0F4F8;
   overflow: scroll;
 }
