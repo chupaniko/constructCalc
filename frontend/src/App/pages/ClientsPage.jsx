@@ -1,14 +1,17 @@
 import Header from "../components/Header";
 import {
   Button,
+  Card,
   Dialog,
   Heading,
   Pane,
   Paragraph,
   Spinner,
+  Text,
   TextInputField,
 } from "evergreen-ui";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { apiCreateClient, apiGetClients } from "../../api/api";
 
 const ClientsPage = () => {
@@ -44,7 +47,7 @@ const ClientsPage = () => {
       .catch((err) => console.error(err));
   };
 
-  const onConfirm = (close) => {
+  const onCreateClientConfirm = (close) => {
     createClient(
       {
         firstName,
@@ -92,7 +95,31 @@ const ClientsPage = () => {
         )}
 
         {clients?.length > 0 && (
-          <Paragraph size={500}>{JSON.stringify(clients)}</Paragraph>
+          <Pane
+            display="grid"
+            gridTemplateColumns="repeat(4, 1fr)"
+            gridGap={20}
+          >
+            {clients.map((c) => (
+              <Link to={`/clients/${c.id}`} className="client-card-link">
+                <Card
+                  className="client-card"
+                  backgroundColor="white"
+                  height={80}
+                  display="flex"
+                  flexDirection="column"
+                  justifyContent="center"
+                  alignItems="center"
+                  elevation={1}
+                  hoverElevation={2}
+                  cursor="pointer"
+                >
+                  <Text>{`${c.lastName} ${c.firstName}`}</Text>
+                  <Text>{`${c.secondName}`}</Text>
+                </Card>
+              </Link>
+            ))}
+          </Pane>
         )}
 
         <Dialog
@@ -101,7 +128,7 @@ const ClientsPage = () => {
           onCloseComplete={() => setIsCreateDialogShown(false)}
           confirmLabel="Создать"
           hasCancel={false}
-          onConfirm={onConfirm}
+          onConfirm={onCreateClientConfirm}
         >
           <TextInputField
             label="Фамилия"

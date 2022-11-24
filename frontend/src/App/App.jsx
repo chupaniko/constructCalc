@@ -1,27 +1,17 @@
 import React from "react";
 import "./App.scss";
-import { Navigate, RouterProvider } from "react-router";
+import { Navigate, Route, Routes } from "react-router";
 import AuthPage from "./pages/AuthPage";
-import { createBrowserRouter } from "react-router-dom";
 import ClientsPage from "./pages/ClientsPage";
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Navigate replace to="/login" />,
-  },
-  {
-    path: "/login",
-    element: <AuthPage />,
-  },
-  {
-    path: "/clients",
-    element: <ClientsPage />,
-  },
-]);
-
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <Routes>
+      <Route path="/" element={<Navigate replace to="/login" />} />
+      <Route path="/login" element={<AuthPage />} />
+      <Route path="/clients" element={<ClientsPage />} />
+    </Routes>
+  );
 }
 
 export default App;
