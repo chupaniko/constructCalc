@@ -1,38 +1,17 @@
 import React from "react";
 import "./App.scss";
-import {RouterProvider} from "react-router";
-import AuthPage from "./components/AuthPage/AuthPage";
-import {createBrowserRouter} from "react-router-dom";
-
-const router = createBrowserRouter([
-    {
-        path: "/",
-        element: <div className="App">
-            <header className="App-header">
-                <p>
-                    Edit <code>src/App.js</code> and save to reload.
-                </p>
-                <a
-                    className="App-link"
-                    href="https://reactjs.org"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    Learn React
-                </a>
-            </header>
-        </div>,
-    },
-    {
-        path: "/login",
-        element: <AuthPage/>,
-    },
-]);
+import { Navigate, Route, Routes } from "react-router";
+import AuthPage from "./pages/AuthPage";
+import ClientsPage from "./pages/ClientsPage";
 
 function App() {
-    return (
-        <RouterProvider router={router}/>
-    );
+  return (
+    <Routes>
+      <Route path="/" element={<Navigate replace to="/login" />} />
+      <Route path="/login" element={<AuthPage />} />
+      <Route path="/clients" element={<ClientsPage />} />
+    </Routes>
+  );
 }
 
 export default App;
