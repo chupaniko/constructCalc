@@ -15,7 +15,7 @@ import { Link } from "react-router-dom";
 import { apiCreateClient, apiGetClients } from "../../api/api";
 
 const ClientsPage = () => {
-  const [clients, setClients] = useState(undefined);
+  const [clients, setClients] = useState(null);
   const [isCreateDialogShown, setIsCreateDialogShown] = useState(false);
 
   const [lastName, setLastName] = useState("");
@@ -69,7 +69,12 @@ const ClientsPage = () => {
     <>
       <Header />
 
-      <Pane className="container">
+      <Pane
+        className="container"
+        display="flex"
+        flex={1}
+        flexDirection="column"
+      >
         <Pane display="flex" justifyContent="space-between" marginBottom={60}>
           <Heading size={900}>Клиенты</Heading>
 
@@ -82,8 +87,13 @@ const ClientsPage = () => {
           </Button>
         </Pane>
 
-        {clients === undefined && (
-          <Pane display="flex" alignItems="center" justifyContent="center">
+        {clients === null && (
+          <Pane
+            display="flex"
+            flex={1}
+            alignItems="center"
+            justifyContent="center"
+          >
             <Spinner />
           </Pane>
         )}
@@ -101,7 +111,11 @@ const ClientsPage = () => {
             gridGap={20}
           >
             {clients.map((c) => (
-              <Link to={`/clients/${c.id}`} className="client-card-link">
+              <Link
+                to={`/clients/${c.id}`}
+                key={c.id}
+                className="client-card-link"
+              >
                 <Card
                   className="client-card"
                   backgroundColor="white"
