@@ -16,13 +16,18 @@ POST: /api/clients/save
 
 *Body:*
 ```
-    "id":1, //в случае, если необходимо отредактировать. Если создаем, то id не указываем
+{
     "lastName":"Иванов",
     "firstName":"Иван",
     "secondName":"Иванович",
     "phone":"+7-900-876-09-87",
     "email":"ex@ex.com",
-    "address":"улица Уличная"
+    "address":"улица Уличная",
+    "usr": {
+        "id": "1",
+        "username":"ivanov@ssau.ru"
+    }
+}
 ```
 
 **Удалить пользователя**
@@ -31,6 +36,10 @@ DELETE: /api/clients/delete/{id}
 
 **Получить информацию о пользователе по id**
 
-GET: /api/clients/byId/{id}
+GET: /api/clients/byId/{id}     
+
+**Получить список клиентов по пользователю**
+GET: /api/clients/findByUser/{username}
+
 
 
