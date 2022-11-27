@@ -38,7 +38,7 @@ DELETE: /api/clients/delete/{id}
 
 GET: /api/clients/byId/{id}     
 
-**Получить список клиентов по пользователю**
+**Получить список клиентов по пользователю**     
 GET: /api/clients/findByUser/{username}
 
 
