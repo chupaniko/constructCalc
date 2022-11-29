@@ -4,9 +4,12 @@ import { Button, Card, Pane, Paragraph, Spinner } from "evergreen-ui";
 import { useEffect, useState } from "react";
 import { apiGetClient } from "../../api/api";
 import CalculationCreateDialog from "../components/CalculationCreateDialog";
+import { useNavigate } from "react-router";
 
 const ClientPage = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
+
   const [client, setClient] = useState(null);
   const [isDialogShown, setIsDialogShown] = useState(false);
 
@@ -57,6 +60,7 @@ const ClientPage = () => {
 
           <CalculationCreateDialog
             isShown={isDialogShown}
+            onFoundationCreate={() => navigate("/foundation")}
             onCloseComplete={() => setIsDialogShown(false)}
           />
         </Pane>

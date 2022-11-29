@@ -97,8 +97,10 @@ const ClientsPage = () => {
         flex={1}
         flexDirection="column"
       >
-        <Pane display="flex" justifyContent="space-between" marginBottom={60}>
-          <Heading size={900}>Клиенты</Heading>
+        <Pane display="flex" justifyContent="space-between" marginBottom={40}>
+          <Heading is="h1" size={900}>
+            Клиенты
+          </Heading>
 
           <Button
             appearance="primary"

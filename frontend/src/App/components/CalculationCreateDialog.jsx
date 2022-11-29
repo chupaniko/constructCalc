@@ -1,6 +1,11 @@
 import { Button, Dialog, Pane } from "evergreen-ui";
 
-const CalculationCreateDialog = ({ isShown, onCloseComplete }) => {
+const CalculationCreateDialog = ({
+  isShown,
+  onCloseComplete,
+  onFrameCreate,
+  onFoundationCreate,
+}) => {
   return (
     <Dialog
       isShown={isShown}
@@ -15,11 +20,11 @@ const CalculationCreateDialog = ({ isShown, onCloseComplete }) => {
         gap={20}
         paddingBottom={32}
       >
-        <Button appearance="primary" width={100}>
+        <Button appearance="primary" width={100} onClick={onFrameCreate}>
           Каркас
         </Button>
 
-        <Button appearance="primary" width={100}>
+        <Button appearance="primary" width={100} onClick={onFoundationCreate}>
           Фундамент
         </Button>
       </Pane>
