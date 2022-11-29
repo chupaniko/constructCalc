@@ -3,9 +3,10 @@ import {
   Button,
   Card,
   Dialog,
+  EmptyState,
   Heading,
   Pane,
-  Paragraph,
+  SearchIcon,
   Spinner,
   Text,
   TextInputField,
@@ -15,8 +16,8 @@ import { Link } from "react-router-dom";
 import { apiCreateClient, apiGetClients } from "../../api/api";
 
 const ClientsPage = () => {
-    const [clients, setClients] = useState(undefined);
-    const [isCreateDialogShown, setIsCreateDialogShown] = useState(false);
+  const [clients, setClients] = useState(null);
+  const [isCreateDialogShown, setIsCreateDialogShown] = useState(false);
 
   const [lastName, setLastName] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -90,9 +91,14 @@ const ClientsPage = () => {
     <>
       <Header />
 
-            <Pane className="container">
-                <Pane display="flex" justifyContent="space-between" marginBottom={60}>
-                    <Heading size={900}>Клиенты</Heading>
+      <Pane
+        className="container"
+        display="flex"
+        flex={1}
+        flexDirection="column"
+      >
+        <Pane display="flex" justifyContent="space-between" marginBottom={60}>
+          <Heading size={900}>Клиенты</Heading>
 
           <Button
             appearance="primary"
@@ -104,14 +110,24 @@ const ClientsPage = () => {
         </Pane>
 
         {clients === undefined && (
-          <Pane display="flex" alignItems="center" justifyContent="center">
+          <Pane
+            display="flex"
+            flex={1}
+            alignItems="center"
+            justifyContent="center"
+          >
             <Spinner />
           </Pane>
         )}
 
         {clients?.length === 0 && (
-          <Pane textAlign="center">
-            <Paragraph size={500}>Клиенты не найдены</Paragraph>
+          <Pane>
+            <EmptyState
+              title="Клиенты не найдены"
+              orientation="vertical"
+              icon={<SearchIcon color="#C1C4D6" />}
+              iconBgColor="#F0F4F8"
+            />
           </Pane>
         )}
 
@@ -122,8 +138,11 @@ const ClientsPage = () => {
             gridGap={20}
           >
             {clients.map((c) => (
-              <Link to={`/clients/${c.id}`} 
-                    key={c.id} className="client-card-link">
+              <Link
+                to={`/clients/${c.id}`}
+                key={c.id}
+                className="client-card-link"
+              >
                 <Card
                   className="client-card"
                   backgroundColor="white"
