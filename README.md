@@ -38,8 +38,32 @@ DELETE: /api/clients/delete/{id}
 
 GET: /api/clients/byId/{id}     
 
-**Получить список клиентов по пользователю**     
+**Получить список клиентов по пользователю**
+
 GET: /api/clients/findByUser/{username}
 
+## Calculation REST Api
+**Расчет фундамента**
 
+POST: /api/calculation/foundation
+
+Body:
+```
+{
+    "externalWallsPerimeter": 30,
+    "internalWallLength": 15,
+    "concretePiles":
+    {
+        "id": 15
+    },
+    "concrete":
+    {
+        "id": 23
+    },
+    "client":{
+        "id": 1
+    },
+    "objectAddress": "ул.Гдетошная, д.33"
+}
+```
 
