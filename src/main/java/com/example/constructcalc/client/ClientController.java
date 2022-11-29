@@ -1,5 +1,8 @@
 package com.example.constructcalc.client;
 
+import com.example.constructcalc.calculation.repositories.ClientCalculationRepository;
+import com.example.constructcalc.client.model.Client;
+import com.example.constructcalc.client.payload.ClientInfo;
 import com.example.constructcalc.user.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,10 +17,12 @@ import java.util.List;
 public class ClientController {
     private ClientRepository clientRepository;
     private UserRepository userRepository;
+    private ClientCalculationRepository clientCalculationRepository;
 
-    public ClientController(ClientRepository clientRepository, UserRepository userRepository){
+    public ClientController(ClientRepository clientRepository, UserRepository userRepository, ClientCalculationRepository clientCalculationRepository){
         this.clientRepository = clientRepository;
         this.userRepository = userRepository;
+        this.clientCalculationRepository = clientCalculationRepository;
     }
 
     @GetMapping("/all")
@@ -55,7 +60,8 @@ public class ClientController {
     }
 
     @GetMapping("/byId/{id}")
-    public ResponseEntity<Client> getClientById(@PathVariable int id){
-        return new ResponseEntity<>(clientRepository.findById(id).get(), HttpStatus.OK);
+    public ResponseEntity<ClientInfo> getClientById(@PathVariable int id){
+        Client client = clientRepository.findById(id).get();
+        return new ResponseEntity<>(new ClientInfo(client, clientCalculationRepository.findByClient(client)), HttpStatus.OK);
     }
 }
