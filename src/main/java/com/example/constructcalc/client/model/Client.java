@@ -1,4 +1,4 @@
-package com.example.constructcalc.client;
+package com.example.constructcalc.client.model;
 
 import com.example.constructcalc.user.AppUser;
 import lombok.Data;

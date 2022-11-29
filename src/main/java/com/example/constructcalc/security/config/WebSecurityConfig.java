@@ -24,7 +24,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable().authorizeRequests().antMatchers(
                 "/api/helloworld/**",
                 "/api/authentication/**",
-                "/api/clients/**" //TODO костыль на первое время!!!
+                "/api/clients/**",
+                "/api/calculation/**"//TODO костыль на первое время!!!
         ).permitAll().anyRequest().authenticated().and().formLogin();
     }
 
