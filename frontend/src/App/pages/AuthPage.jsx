@@ -15,8 +15,8 @@ const AuthPage = () => {
       alignItems="center"
     >
       <Card
-        height={746}
-        width={1350}
+        height={600}
+        width={1200}
         background={"white"}
         borderRadius={16}
         display="flex"
@@ -25,6 +25,7 @@ const AuthPage = () => {
         <Pane
           flex="1"
           backgroundImage={`url(${BuildingImage})`}
+          backgroundSize="cover"
           borderBottomLeftRadius={16}
           borderTopLeftRadius={16}
         />

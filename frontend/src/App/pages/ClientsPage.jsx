@@ -3,9 +3,10 @@ import {
   Button,
   Card,
   Dialog,
+  EmptyState,
   Heading,
   Pane,
-  Paragraph,
+  SearchIcon,
   Spinner,
   Text,
   TextInputField,
@@ -75,7 +76,7 @@ const ClientsPage = () => {
         flex={1}
         flexDirection="column"
       >
-        <Pane display="flex" justifyContent="space-between" marginBottom={60}>
+        <Pane display="flex" justifyContent="space-between" marginBottom={40}>
           <Heading size={900}>Клиенты</Heading>
 
           <Button
@@ -99,8 +100,13 @@ const ClientsPage = () => {
         )}
 
         {clients?.length === 0 && (
-          <Pane textAlign="center">
-            <Paragraph size={500}>Клиенты не найдены</Paragraph>
+          <Pane>
+            <EmptyState
+              title="Клиенты не найдены"
+              orientation="vertical"
+              icon={<SearchIcon color="#C1C4D6" />}
+              iconBgColor="#F0F4F8"
+            />
           </Pane>
         )}
 
