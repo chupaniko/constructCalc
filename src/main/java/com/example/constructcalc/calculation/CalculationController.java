@@ -10,8 +10,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/calculation")
@@ -44,14 +47,30 @@ public class CalculationController {
     @PostMapping("/foundation")
     public ResponseEntity<FoundationResult> calculateFoundation(@RequestBody FoundationRequest foundationRequest)
     {
-        ClientCalculation calculation = clientCalculationRepository.save(new ClientCalculation(foundationRequest.getObjectAddress(), "Открыт", clientRepository.findById(foundationRequest.getClient().getId()).get()));
+        ClientCalculation calculation;
 
+        if (foundationRequest.getCalculation() == null)
+            calculation = clientCalculationRepository.save(new ClientCalculation(foundationRequest.getObjectAddress(), "Открыт", clientRepository.findById(foundationRequest.getClient().getId()).get()));
+        else
+            calculation = clientCalculationRepository.findById(foundationRequest.getCalculation().getId()).get();
 
         FoundationResult foundationResult = new FoundationResult();
         MaterialCharacteristic concretePiles = materialCharacteristicRepository.findById(foundationRequest.getConcretePiles().getId()).get();
         MaterialCharacteristic concreteMaterial = materialCharacteristicRepository.findById(foundationRequest.getConcrete().getId()).get();
 
-        Foundation foundation = foundationRepository.save(new Foundation(foundationRequest.getExternalWallsPerimeter(), foundationRequest.getInternalWallLength(), concretePiles, concreteMaterial, calculation));
+        Foundation foundation;
+        boolean isEdit = false;
+        List<CalculationResult> results = new ArrayList<>();
+        if (foundationRequest.getFoundation() == null)
+        {
+            foundation = foundationRepository.save(new Foundation(foundationRequest.getExternalWallsPerimeter(), foundationRequest.getInternalWallLength(), concretePiles, concreteMaterial, calculation));
+        }
+        else
+        {
+            foundation = foundationRepository.findById(foundationRequest.getFoundation().getId()).get();
+            isEdit = true;
+            results = resultRepository.findByCalculationAndElementType(calculation, "F");
+        }
 
         //сваи
         FoundationElement piles;
@@ -59,7 +78,13 @@ public class CalculationController {
         CalculationResult pilesCount;
         int countPiles = (foundationRequest.getExternalWallsPerimeter() + foundationRequest.getInternalWallLength()) / 2;
         double pricePiles = countPiles * concretePiles.getPrice();
-        pilesCount = new CalculationResult("Количество свай", concretePiles, calculation, countPiles, pricePiles);
+        if (isEdit)
+        {
+            pilesCount = updateCalculationResult(results, "Количество свай", countPiles, pricePiles);
+        }
+        else {
+            pilesCount = new CalculationResult("Количество свай", concretePiles, calculation, countPiles, pricePiles, "F");
+        }
         resultRepository.save(pilesCount);
         piles = new FoundationElement("Сваи", Collections.singletonList(pilesCount), pilesCount.getPrice());
 
@@ -71,7 +96,10 @@ public class CalculationController {
         CalculationResult concrete;
         double concreteCount = (foundationRequest.getExternalWallsPerimeter() + foundationRequest.getInternalWallLength()) * 0.3 * 0.4 * 1.15;
         double contretePrice = concreteCount * concreteMaterial.getPrice();
-        concrete = new CalculationResult("Бетон", concreteMaterial, calculation, concreteCount, contretePrice);
+        if (isEdit)
+            concrete = updateCalculationResult(results, "Бетон", concreteCount, contretePrice);
+        else
+            concrete = new CalculationResult("Бетон", concreteMaterial, calculation, concreteCount, contretePrice, "F");
         resultRepository.save(concrete);
         rostverk.addFoundationMaterialElement(concrete);
         //Арматура 1
@@ -79,7 +107,10 @@ public class CalculationController {
         MaterialCharacteristic armaturaMaterial1 = materialCharacteristicRepository.findByMaterialAndWidth(materialRepository.findByName("Арматура").get(0), 14.0).get(0);
         int armaturaCount1 = ((foundationRequest.getExternalWallsPerimeter() + foundationRequest.getInternalWallLength()) * 4) / 6;
         double armaturaPrice1 = armaturaCount1 * armaturaMaterial1.getPrice();
-        armatura1 = new CalculationResult("Арматура", armaturaMaterial1, calculation, armaturaCount1, armaturaPrice1);
+        if (isEdit)
+            armatura1 = updateCalculationResult(results, "Арматура 1", armaturaCount1, armaturaPrice1);
+        else
+            armatura1 = new CalculationResult("Арматура 1", armaturaMaterial1, calculation, armaturaCount1, armaturaPrice1, "F");
         resultRepository.save(armatura1);
         rostverk.addFoundationMaterialElement(armatura1);
         //Арматура 2
@@ -87,7 +118,10 @@ public class CalculationController {
         MaterialCharacteristic armaturaMaterial2 = materialCharacteristicRepository.findByMaterialAndWidth(materialRepository.findByName("Арматура").get(0), 8.0).get(0);
         int armaturaCount2 = (int)(((foundationRequest.getExternalWallsPerimeter() + foundationRequest.getInternalWallLength()) / 0.3) * (0.2 + 0.3) * 2.0 / 6.0);
         double armaturaPrice2 = armaturaCount2 * armaturaMaterial2.getPrice();
-        armatura2 = new CalculationResult("Арматура", armaturaMaterial1, calculation, armaturaCount2, armaturaPrice1);
+        if (isEdit)
+            armatura2 = updateCalculationResult(results, "Арматура 2", armaturaCount2, armaturaPrice2);
+        else
+            armatura2 = new CalculationResult("Арматура 2", armaturaMaterial1, calculation, armaturaCount2, armaturaPrice1, "F");
         resultRepository.save(armatura2);
         rostverk.addFoundationMaterialElement(armatura2);
 
@@ -100,7 +134,10 @@ public class CalculationController {
         MaterialCharacteristic doskaMaterial = materialCharacteristicRepository.findByMaterialAndWidthAndHeightAndLength(materialRepository.findByName("Доска").get(0), 30.0, 100.0, 3000.0).get(0);
         double doskaCount = (foundationRequest.getExternalWallsPerimeter() + foundationRequest.getInternalWallLength()) * 2 * (0.4 + 0.1) * 0.03;
         double doskaPrice = doskaCount * doskaMaterial.getPrice();
-        doska = new CalculationResult("Доска", doskaMaterial, calculation, doskaCount, doskaPrice);
+        if (isEdit)
+            doska = updateCalculationResult(results, "Доска", doskaCount, doskaPrice);
+        else
+            doska = new CalculationResult("Доска", doskaMaterial, calculation, doskaCount, doskaPrice, "F");
         resultRepository.save(doska);
         opalubka.addFoundationMaterialElement(doska);
         //брус
@@ -108,7 +145,10 @@ public class CalculationController {
         MaterialCharacteristic brusMaterial = materialCharacteristicRepository.findByMaterialAndWidthAndHeightAndLength(materialRepository.findByName("Брус").get(0), 50.0, 50.0, 3000.0).get(0);
         double brusCount = ((foundationRequest.getExternalWallsPerimeter() + foundationRequest.getInternalWallLength()) * 2) / 0.7 * 0.5 * 0.05 * 0.05;
         double brusPrice = brusCount * brusMaterial.getPrice();
-        brus = new CalculationResult("Брус", brusMaterial, calculation, brusCount, brusPrice);
+        if (isEdit)
+            brus = updateCalculationResult(results, "Брус", brusCount, brusPrice);
+        else
+            brus = new CalculationResult("Брус", brusMaterial, calculation, brusCount, brusPrice, "F");
         resultRepository.save(brus);
         opalubka.addFoundationMaterialElement(brus);
 
@@ -126,54 +166,30 @@ public class CalculationController {
         return new ResponseEntity<>(materialCharacteristics, HttpStatus.OK);
     }
 
-    @GetMapping("/autocompleteMaterials")
-    public ResponseEntity<List<MaterialCharacteristic>> autocompleteMaterials(){
-        /*MeasurementUnit sht = measurementUnitRepository.save(new MeasurementUnit(1L, "шт"));
-        MeasurementUnit m3 = measurementUnitRepository.save(new MeasurementUnit(2L, "м3"));
-        MeasurementUnit m = measurementUnitRepository.save(new MeasurementUnit(3L, "м"));
+    @GetMapping("/getFoundationByCalculation/{id}")
+    public ResponseEntity<Foundation> findFoundationByCalculation(@PathVariable(name = "id") long calculationId){
+        return new ResponseEntity<>(foundationRepository.findByCalculation(clientCalculationRepository.findById(calculationId).get()).get(0), HttpStatus.OK);
+    }
 
-        Material svai = materialRepository.save(new Material(1L, "Бетонные сваи"));
-        materialCharacteristicRepository.save(new MaterialCharacteristic(1L, "", 150.0, 150.0, 3000.0, 0, 1500, svai, sht));
-        materialCharacteristicRepository.save(new MaterialCharacteristic(2L, "", 200.0, 200.0, 3000.0, 0, 1900, svai, sht));
-        materialCharacteristicRepository.save(new MaterialCharacteristic(3L, "", 300.0, 300.0, 3000.0, 0, 3383, svai, sht));
-        materialCharacteristicRepository.save(new MaterialCharacteristic(4L, "", 300.0, 300.0, 4000.0, 0, 4346, svai, sht));
-        materialCharacteristicRepository.save(new MaterialCharacteristic(5L, "", 300.0, 300.0, 5000.0, 0, 4953, svai, sht));
+    @DeleteMapping("/deleteCalculation/{id}")
+    public ResponseEntity<List<ClientCalculation>> deleteCalculation(@PathVariable(name = "id") long calculationId){
+        ClientCalculation calculation = clientCalculationRepository.findById(calculationId).get();
 
-        Material beton = materialRepository.save(new Material(2L, "Бетон"));
-        materialCharacteristicRepository.save(new MaterialCharacteristic(6L, "М150(В10)", 0, 0, 0, 0, 2760, beton, m3));
-        materialCharacteristicRepository.save(new MaterialCharacteristic(7L, "М200(В15)", 0, 0, 0, 0, 2910, beton, m3));
-        materialCharacteristicRepository.save(new MaterialCharacteristic(8L, "М250(В20)", 0, 0, 0, 0, 3100, beton, m3));
-        materialCharacteristicRepository.save(new MaterialCharacteristic(9L, "М300 (В22.5)", 0, 0, 0, 0, 3160, beton, m3));
-        materialCharacteristicRepository.save(new MaterialCharacteristic(10L, "М350(В25)", 0, 0, 0, 0, 3260, beton, m3));
-        materialCharacteristicRepository.save(new MaterialCharacteristic(11L, "М400(В30)", 0, 0, 0, 0, 3460, beton, m3));
-        materialCharacteristicRepository.save(new MaterialCharacteristic(12L, "М450(В35)", 0, 0, 0, 0, 3680, beton, m3));
-        materialCharacteristicRepository.save(new MaterialCharacteristic(13L, "М500(В40)", 0, 0, 0, 0, 3760, beton, m3));
-        materialCharacteristicRepository.save(new MaterialCharacteristic(13L, "М550(В45)", 0, 0, 0, 0, 4135, beton, m3));
-        materialCharacteristicRepository.save(new MaterialCharacteristic(13L, "М600(В50)", 0, 0, 0, 0, 4335, beton, m3));
-        materialCharacteristicRepository.save(new MaterialCharacteristic(13L, "М700(В55)", 0, 0, 0, 0, 4680, beton, m3));
-        materialCharacteristicRepository.save(new MaterialCharacteristic(13L, "М800(В65)", 0, 0, 0, 0, 4620, beton, m3));
+        //cascading
+        foundationRepository.deleteAll(foundationRepository.findByCalculation(calculation));
+        resultRepository.deleteAll(resultRepository.findByCalculation(calculation));
 
-        Material armatura = materialRepository.save(new Material(3L, "Арматура"));
-        materialCharacteristicRepository.save(new MaterialCharacteristic(14L, "", 8, 0, 0, 0, 23, armatura, m));
-        materialCharacteristicRepository.save(new MaterialCharacteristic(15L, "", 14, 0, 0, 0, 23, armatura, m));
+        clientCalculationRepository.delete(calculation);
 
-        Material doska = materialRepository.save(new Material(4L, "Доска"));
-        materialCharacteristicRepository.save(new MaterialCharacteristic(16L, "", 30.0, 100.0, 3000.0, 0, 7800, doska, m3));
-        materialCharacteristicRepository.save(new MaterialCharacteristic(17L, "", 50.0, 100.0, 3000.0, 0, 12000, doska, m3));
-        materialCharacteristicRepository.save(new MaterialCharacteristic(18L, "", 50.0, 150.0, 3000.0, 0, 12000, doska, m3));
-        materialCharacteristicRepository.save(new MaterialCharacteristic(19L, "", 50.0, 200.0, 3000.0, 0, 12000, doska, m3));
-        materialCharacteristicRepository.save(new MaterialCharacteristic(20L, "", 50.0, 250.0, 3000.0, 0, 12000, doska, m3));
-        materialCharacteristicRepository.save(new MaterialCharacteristic(21L, "", 50.0, 300.0, 3000.0, 0, 12000, doska, m3));
-        materialCharacteristicRepository.save(new MaterialCharacteristic(22L, "", 50.0, 100.0, 6000.0, 0, 12000, doska, m3));
-        materialCharacteristicRepository.save(new MaterialCharacteristic(23L, "", 50.0, 150.0, 6000.0, 0, 12000, doska, m3));
-        materialCharacteristicRepository.save(new MaterialCharacteristic(24L, "", 50.0, 200.0, 6000.0, 0, 12000, doska, m3));
-        materialCharacteristicRepository.save(new MaterialCharacteristic(25L, "", 50.0, 250.0, 6000.0, 0, 12000, doska, m3));
-        materialCharacteristicRepository.save(new MaterialCharacteristic(26L, "", 50.0, 300.0, 6000.0, 0, 12000, doska, m3));
+        return new ResponseEntity<>(clientCalculationRepository.findAll(), HttpStatus.OK);
+    }
 
-        Material brus = materialRepository.save(new Material(5L, "Брус"));
-        materialCharacteristicRepository.save(new MaterialCharacteristic(27L, "", 50.0, 50.0, 3000.0, 0, 9100, brus, m3));
+    private CalculationResult updateCalculationResult(List<CalculationResult> results, String name, double count, double price)
+    {
+        CalculationResult result = results.stream().filter(x -> x.getName().equals(name)).collect(Collectors.toList()).get(0);
+        result.setCount(count);
+        result.setPrice(price);
 
-        return new ResponseEntity<>(materialCharacteristicRepository.findAll(), HttpStatus.OK);*/
-        return null;
+        return result;
     }
 }

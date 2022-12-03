@@ -37,12 +37,16 @@ public class CalculationResult {
     @Column(name = "price")
     private double price;
 
-    public CalculationResult(String name, MaterialCharacteristic materialCharacteristic, ClientCalculation calculation, double count, double price) {
+    @Column(name = "elementType")
+    private String elementType;
+
+    public CalculationResult(String name, MaterialCharacteristic materialCharacteristic, ClientCalculation calculation, double count, double price, String elementType) {
         this.name = name;
         this.materialCharacteristic = materialCharacteristic;
         this.calculation = calculation;
         this.count = count;
         this.price = price;
+        this.elementType = elementType;
     }
 
     public CalculationResult() {

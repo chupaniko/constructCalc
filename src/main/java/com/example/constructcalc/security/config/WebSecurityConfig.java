@@ -25,6 +25,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 "/api/helloworld/**",
                 "/api/authentication/**",
                 "/api/clients/**",
+                "/autocomplete/**",
                 "/api/calculation/**"//TODO костыль на первое время!!!
         ).permitAll().anyRequest().authenticated().and().formLogin();
     }
