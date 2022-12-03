@@ -1,5 +1,7 @@
 package com.example.constructcalc.calculation.payload;
 
+import com.example.constructcalc.calculation.model.ClientCalculation;
+import com.example.constructcalc.calculation.model.Foundation;
 import com.example.constructcalc.calculation.model.MaterialCharacteristic;
 import com.example.constructcalc.client.model.Client;
 
@@ -10,14 +12,25 @@ public class FoundationRequest {
     private MaterialCharacteristic concrete;
     private Client client;
     private String objectAddress;
+    private ClientCalculation calculation;
+    private Foundation foundation;
 
-    public FoundationRequest(int externalWallsPerimeter, int internalWallLength, MaterialCharacteristic concretePiles, MaterialCharacteristic concrete, Client client, String objectAddress) {
+    public FoundationRequest(int externalWallsPerimeter,
+                             int internalWallLength,
+                             MaterialCharacteristic concretePiles,
+                             MaterialCharacteristic concrete,
+                             Client client,
+                             String objectAddress,
+                             ClientCalculation calculation,
+                             Foundation foundation) {
         this.externalWallsPerimeter = externalWallsPerimeter;
         this.internalWallLength = internalWallLength;
         this.concretePiles = concretePiles;
         this.concrete = concrete;
         this.client = client;
         this.objectAddress = objectAddress;
+        this.calculation = calculation;
+        this.foundation = foundation;
     }
 
     public int getExternalWallsPerimeter() {
@@ -66,5 +79,21 @@ public class FoundationRequest {
 
     public void setObjectAddress(String objectAddress) {
         this.objectAddress = objectAddress;
+    }
+
+    public ClientCalculation getCalculation() {
+        return calculation;
+    }
+
+    public void setCalculation(ClientCalculation calculation) {
+        this.calculation = calculation;
+    }
+
+    public Foundation getFoundation() {
+        return foundation;
+    }
+
+    public void setFoundation(Foundation foundation) {
+        this.foundation = foundation;
     }
 }
