@@ -5,6 +5,10 @@
 * cd frontend
 * npm start
 
+**Автозаполнение БД:**
+
+GET: /autocomplete/
+
 ## Clients REST Api
 **Получить список всех клиентов**
 
@@ -43,6 +47,20 @@ GET: /api/clients/byId/{id}
 GET: /api/clients/findByUser/{username}
 
 ## Calculation REST Api
+**Получить характеристики материалов**
+
+Используем для выпадашек при расчетах (например, получаем различные виды Бетона) - если необходимо, будем улучшать, щас пока по id
+
+GET: /getMaterialCharacteristics/{materialId}
+
+**Получить текущие параметры фундамента по расчету**
+
+GET: /getFoundationByCalculation/{id}
+
+**Удалить расчет**
+
+DELETE: /deleteCalculation/{id}
+
 **Расчет фундамента**
 
 POST: /api/calculation/foundation
@@ -50,8 +68,8 @@ POST: /api/calculation/foundation
 Body:
 ```
 {
-    "externalWallsPerimeter": 30,
-    "internalWallLength": 15,
+    "externalWallsPerimeter": 36,
+    "internalWallLength": 25,
     "concretePiles":
     {
         "id": 15
@@ -63,7 +81,13 @@ Body:
     "client":{
         "id": 1
     },
-    "objectAddress": "ул.Гдетошная, д.33"
+   "objectAddress": "ул.Гдетошная, д.33",
+   "calculation": { //если мы добавляем фундамент к уже существующему расчету
+       "id": 58
+   },
+   "foundation":{ //если мы редактируем расчет фундамента
+       "id": 51
+   }
 }
 ```
 
