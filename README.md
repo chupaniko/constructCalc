@@ -53,6 +53,14 @@ GET: /api/clients/findByUser/{username}
 
 GET: /getMaterialCharacteristics/{materialId}
 
+**Получить информацию по бетону (для выпадашек)**
+
+GET: api/calculation/getBetonValues
+
+**Получить информацию по бетонным сваям (для выпадашек)**
+
+GET: api/calculation/getBetonPilesValues
+
 **Получить текущие параметры фундамента по расчету**
 
 GET: /getFoundationByCalculation/{id}
