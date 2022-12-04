@@ -166,6 +166,18 @@ public class CalculationController {
         return new ResponseEntity<>(materialCharacteristics, HttpStatus.OK);
     }
 
+    @GetMapping("/getBetonValues")
+    public ResponseEntity<List<MaterialCharacteristic>> getBetonValues(){
+        Material beton = materialRepository.findByName("Бетон").get(0);
+        return new ResponseEntity<>(materialCharacteristicRepository.findByMaterial(beton), HttpStatus.OK);
+    }
+
+    @GetMapping("/getBetonPilesValues")
+    public ResponseEntity<List<MaterialCharacteristic>> getBetonPiles(){
+        Material betonPiles = materialRepository.findByName("Бетонные сваи").get(0);
+        return new ResponseEntity<>(materialCharacteristicRepository.findByMaterial(betonPiles), HttpStatus.OK);
+    }
+
     @GetMapping("/getFoundationByCalculation/{id}")
     public ResponseEntity<Foundation> findFoundationByCalculation(@PathVariable(name = "id") long calculationId){
         return new ResponseEntity<>(foundationRepository.findByCalculation(clientCalculationRepository.findById(calculationId).get()).get(0), HttpStatus.OK);
