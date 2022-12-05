@@ -15,11 +15,19 @@ import {
   apiGetBetonPilesValues,
   apiGetClient,
   apiGetConcreteValues,
+  apiGetFoundationCalculation,
 } from "../../api/api";
 import { useEffect, useState } from "react";
 
 const FoundationPage = () => {
   const [clientInfo, setClientInfo] = useState(undefined);
+
+  const [address, setAddress] = useState("");
+  const [externalWallsPerimeter, setExternalWallsPerimeter] = useState("");
+  const [internalWallsLength, setInternalWallsLength] = useState("");
+  const [concrete, setConcrete] = useState("");
+  const [concretePiles, setConcretePiles] = useState("");
+
   const [concreteValues, setConcreteValues] = useState([]);
   const [concretePilesValues, setConcretePilesValues] = useState([]);
 
@@ -28,12 +36,20 @@ const FoundationPage = () => {
 
   useEffect(() => {
     apiGetConcreteValues().then(({ data }) => {
-      setConcreteValues(data.map((d) => d.name));
+      setConcreteValues(
+        data.map((d) => ({
+          name: d.name,
+          id: d.id,
+        }))
+      );
     });
 
     apiGetBetonPilesValues().then(({ data }) => {
       setConcretePilesValues(
-        data.map((d) => `${d.width} x ${d.height} x ${d.length}`)
+        data.map((d) => ({
+          name: `${d.width} x ${d.height} x ${d.length}`,
+          id: d.id,
+        }))
       );
     });
   }, []);
@@ -48,8 +64,53 @@ const FoundationPage = () => {
       .catch((err) => console.error(err));
   };
 
+  const isFieldsFilled = () => {
+    return (
+      address &&
+      externalWallsPerimeter &&
+      internalWallsLength &&
+      concrete &&
+      concretePiles
+    );
+  };
+
   const onClientInfoClick = () => {
     getClient(clientId);
+  };
+
+  const onClean = () => {
+    setAddress("");
+    setExternalWallsPerimeter("");
+    setInternalWallsLength("");
+    setConcretePiles("");
+    setConcrete("");
+  };
+
+  const onCalculate = () => {
+    const json = JSON.stringify({
+      externalWallsPerimeter: externalWallsPerimeter,
+      internalWallLength: internalWallsLength,
+      concretePiles: {
+        id: concretePiles,
+      },
+      concrete: {
+        id: concrete,
+      },
+      client: {
+        id: clientId,
+      },
+      objectAddress: address,
+      // calculation: {
+      //   //если мы добавляем фундамент к уже существующему расчету
+      //   id: 58,
+      // },
+      // foundation: {
+      //   //если мы редактируем расчет фундамента
+      //   id: 51,
+      // },
+    });
+
+    apiGetFoundationCalculation(json).then(({ data }) => console.log(data));
   };
 
   return (
@@ -90,7 +151,13 @@ const FoundationPage = () => {
             </Popover>
           </Pane>
 
-          <TextInputField label="Адрес объекта" width={600} marginBottom={0} />
+          <TextInputField
+            label="Адрес объекта"
+            width={600}
+            marginBottom={0}
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+          />
         </Pane>
 
         <Card
@@ -113,6 +180,9 @@ const FoundationPage = () => {
               justifyContent="space-between"
               marginBottom={12}
               label="Периметр внешних стен"
+              type="number"
+              value={externalWallsPerimeter}
+              onChange={(e) => setExternalWallsPerimeter(e.target.value)}
             />
 
             <TextInputField
@@ -122,6 +192,9 @@ const FoundationPage = () => {
               justifyContent="space-between"
               marginBottom={12}
               label="Длина внутренних стен"
+              type="number"
+              value={internalWallsLength}
+              onChange={(e) => setInternalWallsLength(e.target.value)}
             />
 
             <Pane
@@ -137,7 +210,9 @@ const FoundationPage = () => {
                   openOnFocus
                   isLoading={!concretePilesValues}
                   items={concretePilesValues}
-                  onChange={(selected) => console.log(selected)}
+                  itemToString={(item) => (item ? item.name : "")}
+                  value={concretePiles}
+                  onChange={(selected) => setConcretePiles(selected.id)}
                 />
               </Pane>
             </Pane>
@@ -154,7 +229,9 @@ const FoundationPage = () => {
                   openOnFocus
                   isLoading={!concreteValues}
                   items={concreteValues}
-                  onChange={(selected) => console.log(selected)}
+                  itemToString={(item) => (item ? item.name : "")}
+                  value={concrete}
+                  onChange={(selected) => setConcrete(selected.id)}
                 />
               </Pane>
             </Pane>
@@ -162,10 +239,17 @@ const FoundationPage = () => {
         </Card>
 
         <Pane textAlign="right" marginTop={40}>
-          <Button intent="danger" marginRight={20}>
+          <Button intent="danger" marginRight={20} onClick={onClean}>
             Очистить расчёт
           </Button>
-          <Button appearance="primary">Рассчитать</Button>
+
+          <Button
+            appearance="primary"
+            disabled={!isFieldsFilled()}
+            onClick={onCalculate}
+          >
+            Рассчитать
+          </Button>
         </Pane>
       </Pane>
     </>

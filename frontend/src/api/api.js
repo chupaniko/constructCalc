@@ -31,3 +31,7 @@ export const apiGetConcreteValues = () => {
 export const apiGetBetonPilesValues = () => {
   return instance.get("/calculation/getBetonPilesValues");
 };
+
+export const apiGetFoundationCalculation = (data) => {
+  return instance.post("/calculation/foundation", data, { headers });
+};
