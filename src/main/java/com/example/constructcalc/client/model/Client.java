@@ -1,5 +1,6 @@
-package com.example.constructcalc.client;
+package com.example.constructcalc.client.model;
 
+import com.example.constructcalc.user.AppUser;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -29,6 +30,10 @@ public class Client {
 
     @Column(name = "address")
     private String address;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="usr", referencedColumnName = "id")
+    private AppUser usr;
 
     public String getLastName() {
         return lastName;

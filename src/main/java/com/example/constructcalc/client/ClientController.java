@@ -1,5 +1,9 @@
 package com.example.constructcalc.client;
 
+import com.example.constructcalc.calculation.repositories.ClientCalculationRepository;
+import com.example.constructcalc.client.model.Client;
+import com.example.constructcalc.client.payload.ClientInfo;
+import com.example.constructcalc.user.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,9 +16,13 @@ import java.util.List;
 @RequestMapping("/api/clients")
 public class ClientController {
     private ClientRepository clientRepository;
+    private UserRepository userRepository;
+    private ClientCalculationRepository clientCalculationRepository;
 
-    public ClientController(ClientRepository clientRepository){
+    public ClientController(ClientRepository clientRepository, UserRepository userRepository, ClientCalculationRepository clientCalculationRepository){
         this.clientRepository = clientRepository;
+        this.userRepository = userRepository;
+        this.clientCalculationRepository = clientCalculationRepository;
     }
 
     @GetMapping("/all")
@@ -23,9 +31,18 @@ public class ClientController {
         return new ResponseEntity<>(allClientNames, HttpStatus.OK);
     }
 
+    @GetMapping("/findByUser/{username}")
+    public ResponseEntity<List<Client>> getByUser(@PathVariable(name="username") String username)
+    {
+        System.out.println(userRepository.findUserByUsername(username));
+        List<Client> clients = clientRepository.findByUsr(userRepository.findUserByUsername(username).get());
+        return new ResponseEntity<>(clients, HttpStatus.OK);
+    }
+
     @PostMapping("/save")
     public ResponseEntity<Client> saveClient(@RequestBody Client client){
         Client savedClient = clientRepository.save(client);
+
         if (savedClient == null){
             return ResponseEntity.status(422).build();
         }
@@ -43,7 +60,8 @@ public class ClientController {
     }
 
     @GetMapping("/byId/{id}")
-    public ResponseEntity<Client> getClientById(@PathVariable int id){
-        return new ResponseEntity<>(clientRepository.findById(id).get(), HttpStatus.OK);
+    public ResponseEntity<ClientInfo> getClientById(@PathVariable int id){
+        Client client = clientRepository.findById(id).get();
+        return new ResponseEntity<>(new ClientInfo(client, clientCalculationRepository.findByClient(client)), HttpStatus.OK);
     }
 }

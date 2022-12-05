@@ -5,6 +5,10 @@
 * cd frontend
 * npm start
 
+**Автозаполнение БД:**
+
+GET: /autocomplete/
+
 ## Clients REST Api
 **Получить список всех клиентов**
 
@@ -16,13 +20,18 @@ POST: /api/clients/save
 
 *Body:*
 ```
-    "id":1, //в случае, если необходимо отредактировать. Если создаем, то id не указываем
+{
     "lastName":"Иванов",
     "firstName":"Иван",
     "secondName":"Иванович",
     "phone":"+7-900-876-09-87",
     "email":"ex@ex.com",
-    "address":"улица Уличная"
+    "address":"улица Уличная",
+    "usr": {
+        "id": "1",
+        "username":"ivanov@ssau.ru"
+    }
+}
 ```
 
 **Удалить пользователя**
@@ -31,6 +40,62 @@ DELETE: /api/clients/delete/{id}
 
 **Получить информацию о пользователе по id**
 
-GET: /api/clients/byId/{id}
+GET: /api/clients/byId/{id}     
 
+**Получить список клиентов по пользователю**
+
+GET: /api/clients/findByUser/{username}
+
+## Calculation REST Api
+**Получить характеристики материалов**
+
+Используем для выпадашек при расчетах (например, получаем различные виды Бетона) - если необходимо, будем улучшать, щас пока по id
+
+GET: /getMaterialCharacteristics/{materialId}
+
+**Получить информацию по бетону (для выпадашек)**
+
+GET: api/calculation/getBetonValues
+
+**Получить информацию по бетонным сваям (для выпадашек)**
+
+GET: api/calculation/getBetonPilesValues
+
+**Получить текущие параметры фундамента по расчету**
+
+GET: /getFoundationByCalculation/{id}
+
+**Удалить расчет**
+
+DELETE: /deleteCalculation/{id}
+
+**Расчет фундамента**
+
+POST: /api/calculation/foundation
+
+Body:
+```
+{
+    "externalWallsPerimeter": 36,
+    "internalWallLength": 25,
+    "concretePiles":
+    {
+        "id": 15
+    },
+    "concrete":
+    {
+        "id": 23
+    },
+    "client":{
+        "id": 1
+    },
+   "objectAddress": "ул.Гдетошная, д.33",
+   "calculation": { //если мы добавляем фундамент к уже существующему расчету
+       "id": 58
+   },
+   "foundation":{ //если мы редактируем расчет фундамента
+       "id": 51
+   }
+}
+```
 
