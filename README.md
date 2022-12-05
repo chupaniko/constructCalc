@@ -15,8 +15,10 @@ POST: /api/authentication/
     "username": "ivanov@ssau.ru",
     "password": "ivanov128"
 }
+```
 
 *Returns*
+```
 {
     "id": 1,
     "username": "ivanov@ssau.ru",
