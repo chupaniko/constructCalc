@@ -11,3 +11,7 @@ export const apiGetClients = () => {
 export const apiCreateClient = (data) => {
   return instance.post("/clients/save", data);
 };
+
+export const apiAuth = (data) => {
+  return instance.post("/authentication", data);
+}

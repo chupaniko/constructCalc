@@ -3,6 +3,7 @@ package com.example.constructcalc.authentification;
 import com.example.constructcalc.user.AppUser;
 import com.example.constructcalc.user.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,6 +15,8 @@ public class AuthService {
         return userService.authUser(new AppUser(request.getUsername(), request.getPassword()));
     }
 
-
+    public ResponseEntity<AppUser> getUserByUsername(String username) {
+        return ResponseEntity.ok(userService.getUserByUsername(username));
+    }
 }
 

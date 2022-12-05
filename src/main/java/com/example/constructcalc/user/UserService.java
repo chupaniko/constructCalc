@@ -31,7 +31,7 @@ public class UserService implements UserDetailsService {
 
     public String saveUser(String username, String password) {
         userRepository.save(new AppUser(username, (new BCryptPasswordEncoder()).encode(password)));
-        return userRepository.existsByUsername(username) ? username : "huj";
+        return userRepository.existsByUsername(username) ? username : "";
     }
 
     public boolean authUser(AppUser requestAppUser) {
@@ -39,5 +39,9 @@ public class UserService implements UserDetailsService {
         user = userRepository.findUserByUsername(requestAppUser.getUsername())
                 .orElse(new AppUser("", ""));
         return Objects.equals(user.getUsername(), requestAppUser.getUsername()) && (new BCryptPasswordEncoder()).matches(requestAppUser.getPassword(), user.getPassword());
+    }
+
+    public AppUser getUserByUsername(String username) {
+        return userRepository.findUserByUsername(username).orElseThrow(() -> new IllegalStateException("user not found"));
     }
 }

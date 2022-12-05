@@ -32,6 +32,18 @@ const ClientsPage = () => {
   };
 
   const createClient = (data, callback) => {
+    let json = JSON.stringify({
+      "lastName": lastName,
+      "firstName": firstName,
+      "secondName": secondName,
+      "phone": phone,
+      "email": email,
+      "address": address,
+      "usr": {
+        "id": sessionStorage.getItem("userId"),
+        "username": sessionStorage.getItem("username")
+      }
+    })
     apiCreateClient({
       firstName,
       lastName,
