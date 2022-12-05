@@ -76,7 +76,7 @@ public class CalculationController {
         FoundationElement piles;
         //количество свай
         CalculationResult pilesCount;
-        int countPiles = (foundationRequest.getExternalWallsPerimeter() + foundationRequest.getInternalWallLength()) / 2;
+        int countPiles = (int)Math.ceil((foundationRequest.getExternalWallsPerimeter() + foundationRequest.getInternalWallLength()) / 2.0);
         double pricePiles = countPiles * concretePiles.getPrice();
         if (isEdit)
         {
@@ -105,7 +105,7 @@ public class CalculationController {
         //Арматура 1
         CalculationResult armatura1;
         MaterialCharacteristic armaturaMaterial1 = materialCharacteristicRepository.findByMaterialAndWidth(materialRepository.findByName("Арматура").get(0), 14.0).get(0);
-        int armaturaCount1 = ((foundationRequest.getExternalWallsPerimeter() + foundationRequest.getInternalWallLength()) * 4) / 6;
+        int armaturaCount1 = (int)Math.ceil(((foundationRequest.getExternalWallsPerimeter() + foundationRequest.getInternalWallLength()) * 4.0) / 6.0);
         double armaturaPrice1 = armaturaCount1 * armaturaMaterial1.getPrice();
         if (isEdit)
             armatura1 = updateCalculationResult(results, "Арматура 1", armaturaCount1, armaturaPrice1);
@@ -116,7 +116,7 @@ public class CalculationController {
         //Арматура 2
         CalculationResult armatura2;
         MaterialCharacteristic armaturaMaterial2 = materialCharacteristicRepository.findByMaterialAndWidth(materialRepository.findByName("Арматура").get(0), 8.0).get(0);
-        int armaturaCount2 = (int)(((foundationRequest.getExternalWallsPerimeter() + foundationRequest.getInternalWallLength()) / 0.3) * (0.2 + 0.3) * 2.0 / 6.0);
+        int armaturaCount2 = (int)Math.ceil(((foundationRequest.getExternalWallsPerimeter() + foundationRequest.getInternalWallLength()) / 0.3) * (0.2 + 0.3) * 2.0 / 6.0);
         double armaturaPrice2 = armaturaCount2 * armaturaMaterial2.getPrice();
         if (isEdit)
             armatura2 = updateCalculationResult(results, "Арматура 2", armaturaCount2, armaturaPrice2);
@@ -124,7 +124,7 @@ public class CalculationController {
             armatura2 = new CalculationResult("Арматура 2", armaturaMaterial1, calculation, armaturaCount2, armaturaPrice1, "F");
         resultRepository.save(armatura2);
         rostverk.addFoundationMaterialElement(armatura2);
-
+        rostverk.setName("Ростверк");
         foundationResult.addElement(rostverk);
 
         //Опалубка
@@ -151,7 +151,7 @@ public class CalculationController {
             brus = new CalculationResult("Брус", brusMaterial, calculation, brusCount, brusPrice, "F");
         resultRepository.save(brus);
         opalubka.addFoundationMaterialElement(brus);
-
+        opalubka.setName("Опалубка");
         foundationResult.addElement(opalubka);
 
         return new ResponseEntity<>(foundationResult, HttpStatus.OK);
