@@ -17,6 +17,6 @@ public class AuthController {
 
     @PostMapping
     public ResponseEntity<AppUser> auth (@RequestBody AuthRequest request) {
-        return authService.getUserByUsername(request.getUsername());
+        return ResponseEntity.ok(authService.getUserByUsername(request.getUsername()));
     }
 }

@@ -15,8 +15,8 @@ public class AuthService {
         return userService.authUser(new AppUser(request.getUsername(), request.getPassword()));
     }
 
-    public ResponseEntity<AppUser> getUserByUsername(String username) {
-        return ResponseEntity.ok(userService.getUserByUsername(username));
+    public AppUser getUserByUsername(String username) {
+        return userService.getUserByUsername(username);
     }
 }
 

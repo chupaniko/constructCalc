@@ -15,3 +15,7 @@ export const apiCreateClient = (data) => {
 export const apiAuth = (data) => {
   return instance.post("/authentication", data);
 }
+
+export const headers = {
+  'Content-Type': 'application/json;charset=utf-8',
+};

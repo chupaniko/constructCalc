@@ -4,14 +4,11 @@ import BuildingImage from "../../assets/building.jpg";
 import logo from "../../assets/logo.png";
 import axios from "axios";
 import {useNavigate} from "react-router";
+import {apiAuth, headers} from "../../api/api";
 
 const AuthPage = () => {
     const [login, setLogin] = React.useState("");
     const [password, setPassword] = React.useState("");
-
-    const headers = {
-        'Content-Type': 'application/json;charset=utf-8',
-    };
 
     let navigate = useNavigate();
 
@@ -22,17 +19,29 @@ const AuthPage = () => {
             username: login,
             password: password
         });
-        axios.post('http://localhost:6579/api/authentication',
-            json,
-            {headers}).then(response => {
+        /*apiAuth(json).catch(error => {
+            if (error.response) {
+                sessionStorage.setItem("username", "");
+                sessionStorage.setItem("userId", "");
+            }
+        }).then(response => {
             sessionStorage.setItem("username", response.data["username"]);
             sessionStorage.setItem("userId", response.data["id"]);
-            console.log(sessionStorage.getItem("username"));
-            console.log(sessionStorage.getItem("userId"));
+            navigate("/clients");
+        });*/
+        axios.post('http://localhost:6579/api/authentication',
+            json,
+            {headers}
+        ).catch(error => {
+                if (error.response) {
+                    sessionStorage.setItem("username", "");
+                    sessionStorage.setItem("userId", "");
+                }
+        }).then(response => {
+            sessionStorage.setItem("username", response.data["username"]);
+            sessionStorage.setItem("userId", response.data["id"]);
+            navigate("/clients");
         });
-        if (sessionStorage.getItem("login") !== "" && sessionStorage.getItem("login") !== null) {
-            navigate("/clients", {replace: true});
-        }
     }
 
     return (
