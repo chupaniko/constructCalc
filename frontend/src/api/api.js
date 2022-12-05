@@ -23,3 +23,11 @@ export const apiGetClient = (id) => {
 export const apiAuth = (data) => {
   return instance.post("/authentication", data, { headers });
 };
+
+export const apiGetConcreteValues = () => {
+  return instance.get("/calculation/getBetonValues");
+};
+
+export const apiGetBetonPilesValues = () => {
+  return instance.get("/calculation/getBetonPilesValues");
+};

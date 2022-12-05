@@ -8,16 +8,39 @@ import {
   Pane,
   Paragraph,
   Popover,
+  Spinner,
   TextInputField,
 } from "evergreen-ui";
-import { apiGetClient } from "../../api/api";
-import { useState } from "react";
+import {
+  apiGetBetonPilesValues,
+  apiGetClient,
+  apiGetConcreteValues,
+} from "../../api/api";
+import { useEffect, useState } from "react";
 
 const FoundationPage = () => {
   const [clientInfo, setClientInfo] = useState(undefined);
+  const [concreteValues, setConcreteValues] = useState([]);
+  const [concretePilesValues, setConcretePilesValues] = useState([]);
 
   const queryParams = new URLSearchParams(window.location.search);
   const clientId = queryParams.get("clientId");
+
+  useEffect(() => {
+    apiGetConcreteValues().then(({ data }) => {
+      setConcreteValues(data.map((d) => d.name));
+    });
+
+    apiGetBetonPilesValues().then(({ data }) => {
+      setConcretePilesValues(
+        data.map((d) => `${d.width} x ${d.height} x ${d.length}`)
+      );
+    });
+  }, []);
+
+  useEffect(() => {
+    apiGetClient(clientId).then(({ data }) => setClientInfo(data));
+  }, [clientId]);
 
   const getClient = (id) => {
     apiGetClient(id)
@@ -48,18 +71,22 @@ const FoundationPage = () => {
               content={
                 <Pane padding={20}>
                   <Paragraph size={500} fontWeight="bold" marginBottom={16}>
-                    {`${clientInfo.client.lastName} ${clientInfo.client.firstName} ${clientInfo.client.secondName}`}
+                    {`${clientInfo?.client.lastName} ${clientInfo?.client.firstName} ${clientInfo?.client.secondName}`}
                   </Paragraph>
 
-                  <Paragraph>{clientInfo.client.address}</Paragraph>
-                  <Paragraph>{clientInfo.client.phone}</Paragraph>
-                  <Paragraph>{clientInfo.client.email}</Paragraph>
+                  <Paragraph>{clientInfo?.client.address}</Paragraph>
+                  <Paragraph>{clientInfo?.client.phone}</Paragraph>
+                  <Paragraph>{clientInfo?.client.email}</Paragraph>
                 </Pane>
               }
             >
-              <Button marginTop={12} onClick={onClientInfoClick}>
-                Информация о клиенте
-              </Button>
+              {clientInfo ? (
+                <Button marginTop={12} onClick={onClientInfoClick}>
+                  Информация о клиенте
+                </Button>
+              ) : (
+                <Spinner marginTop={12} size={24} />
+              )}
             </Popover>
           </Pane>
 
@@ -108,7 +135,8 @@ const FoundationPage = () => {
               <Pane>
                 <Combobox
                   openOnFocus
-                  items={["Banana", "Orange", "Apple", "Mango"]}
+                  isLoading={!concretePilesValues}
+                  items={concretePilesValues}
                   onChange={(selected) => console.log(selected)}
                 />
               </Pane>
@@ -124,7 +152,8 @@ const FoundationPage = () => {
               <Pane>
                 <Combobox
                   openOnFocus
-                  items={["Banana", "Orange", "Apple", "Mango"]}
+                  isLoading={!concreteValues}
+                  items={concreteValues}
                   onChange={(selected) => console.log(selected)}
                 />
               </Pane>
