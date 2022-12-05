@@ -2,9 +2,8 @@ import React from "react";
 import { Button, Card, Heading, Pane, TextInputField } from "evergreen-ui";
 import BuildingImage from "../../assets/building.jpg";
 import logo from "../../assets/logo.png";
-import axios from "axios";
-import {useNavigate} from "react-router";
-import {apiAuth, headers} from "../../api/api";
+import { useNavigate } from "react-router";
+import { apiAuth } from "../../api/api";
 
 const AuthPage = () => {
   const [login, setLogin] = React.useState("");
@@ -15,33 +14,27 @@ const AuthPage = () => {
   function handleSubmit(e) {
     e.preventDefault();
     e.stopPropagation();
+
     let json = JSON.stringify({
       username: login,
-      password: password
+      password: password,
     });
-    /*apiAuth(json).catch(error => {
-        if (error.response) {
-            sessionStorage.setItem("username", "");
-            sessionStorage.setItem("userId", "");
-        }
-    }).then(response => {
+
+    apiAuth(json)
+      .then((response) => {
         sessionStorage.setItem("username", response.data["username"]);
         sessionStorage.setItem("userId", response.data["id"]);
+
         navigate("/clients");
-    });*/
-    axios.post('http://localhost:6579/api/authentication',
-      json,
-      {headers}
-    ).catch(error => {
-      if (error.response) {
-        sessionStorage.setItem("username", "");
-        sessionStorage.setItem("userId", "");
-      }
-    }).then(response => {
-      sessionStorage.setItem("username", response.data["username"]);
-      sessionStorage.setItem("userId", response.data["id"]);
-      navigate("/clients");
-    });
+      })
+      .catch((error) => {
+        console.error(error);
+
+        if (error.response) {
+          sessionStorage.setItem("username", "");
+          sessionStorage.setItem("userId", "");
+        }
+      });
   }
 
   return (
@@ -88,11 +81,12 @@ const AuthPage = () => {
             </Heading>
           </Pane>
 
-          <form className="login-form">
+          <form className="login-form" onSubmit={handleSubmit}>
             <Pane display="flex" flexDirection="column" alignItems="center">
               <TextInputField
                 placeholder="Логин"
-                validationMessage="Введите логин"
+                isInvalid={!login}
+                validationMessage={!login ? "Введите логин" : false}
                 value={login}
                 onChange={(e) => setLogin(e.target.value)}
                 marginBottom={4}
@@ -101,7 +95,8 @@ const AuthPage = () => {
 
               <TextInputField
                 placeholder="Пароль"
-                validationMessage="Введите пароль"
+                isInvalid={!password}
+                validationMessage={!password ? "Введите пароль" : false}
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}

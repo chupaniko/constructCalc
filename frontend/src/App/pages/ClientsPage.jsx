@@ -32,55 +32,30 @@ const ClientsPage = () => {
       .catch((err) => console.error(err));
   };
 
-    const createClient = (data, callback) => {
-        let json = JSON.stringify({
-            "lastName": lastName,
-            "firstName": firstName,
-            "secondName": secondName,
-            "phone": phone,
-            "email": email,
-            "address": address,
-            "usr": {
-                "id": sessionStorage.getItem("userId"),
-                "username": sessionStorage.getItem("username")
-            }
-        });
-        axios.post('http://localhost:6579/api/clients/save',
-            json,
-            {headers})
-            .then(() => {
-                getClients();
-                callback();
-            })
-            .catch((err) => console.error(err));
+  const createClient = (callback) => {
+    let json = JSON.stringify({
+      lastName: lastName,
+      firstName: firstName,
+      secondName: secondName,
+      phone: phone,
+      email: email,
+      address: address,
+      usr: {
+        id: sessionStorage.getItem("userId"),
+        username: sessionStorage.getItem("username"),
+      },
+    });
 
-        /*apiCreateClient({
-            firstName,
-            lastName,
-            secondName,
-            phone,
-            email,
-            address,
-        })
-            .then(() => {
-                getClients();
-                callback();
-            })
-            .catch((err) => console.error(err));*/
-    };
+    apiCreateClient(json)
+      .then(() => {
+        getClients();
+        callback();
+      })
+      .catch((err) => console.error(err));
+  };
 
   const onCreateClientConfirm = (close) => {
-    createClient(
-      {
-        firstName,
-        lastName,
-        secondName,
-        phone,
-        email,
-        address,
-      },
-      close
-    );
+    createClient(close);
   };
 
   useEffect(() => {

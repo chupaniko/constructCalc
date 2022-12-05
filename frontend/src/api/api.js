@@ -1,5 +1,9 @@
 import axios from "axios";
 
+export const headers = {
+  "Content-Type": "application/json;charset=utf-8",
+};
+
 const instance = axios.create({
   baseURL: "http://localhost:6579/api/",
 });
@@ -9,7 +13,7 @@ export const apiGetClients = () => {
 };
 
 export const apiCreateClient = (data) => {
-  return instance.post("/clients/save", data);
+  return instance.post("/clients/save", data, { headers });
 };
 
 export const apiGetClient = (id) => {
@@ -17,9 +21,5 @@ export const apiGetClient = (id) => {
 };
 
 export const apiAuth = (data) => {
-  return instance.post("/authentication", data);
-}
-
-export const headers = {
-  'Content-Type': 'application/json;charset=utf-8',
+  return instance.post("/authentication", data, { headers });
 };

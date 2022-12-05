@@ -10,12 +10,12 @@ const ClientPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const [client, setClient] = useState(null);
+  const [clientInfo, setClientInfo] = useState(null);
   const [isDialogShown, setIsDialogShown] = useState(false);
 
   const getClient = (id) => {
     apiGetClient(id)
-      .then(({ data }) => setClient(data))
+      .then(({ data }) => setClientInfo(data))
       .catch((err) => console.error(err));
   };
 
@@ -27,7 +27,7 @@ const ClientPage = () => {
     <>
       <Header />
 
-      {client === null ? (
+      {clientInfo === null ? (
         <Pane
           display="flex"
           flex={1}
@@ -42,11 +42,11 @@ const ClientPage = () => {
             <Pane display="flex" justifyContent="space-between">
               <Pane>
                 <Paragraph fontSize={28} fontWeight="bold" marginBottom={20}>
-                  {`${client.lastName} ${client.firstName} ${client.secondName}`}
+                  {`${clientInfo.client.lastName} ${clientInfo.client.firstName} ${clientInfo.client.secondName}`}
                 </Paragraph>
 
-                <Paragraph>{client.address}</Paragraph>
-                <Paragraph>{`тел. ${client.phone}`}</Paragraph>
+                <Paragraph>{clientInfo.client.address}</Paragraph>
+                <Paragraph>{`тел. ${clientInfo.client.phone}`}</Paragraph>
               </Pane>
 
               <Button
