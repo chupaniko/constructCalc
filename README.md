@@ -5,6 +5,34 @@
 * cd frontend
 * npm start
 
+**Авторизация**
+
+POST: /api/authentication/
+
+*Body*
+```
+{
+    "username": "ivanov@ssau.ru",
+    "password": "ivanov128"
+}
+
+*Returns*
+{
+    "id": 1,
+    "username": "ivanov@ssau.ru",
+    "password": "$2a$10$hXttVfHu7tqpSUkWPn3tJeC5z/gp54frP0GR2QgKBh9uAg1l3Insi",
+    "enabled": true,
+    "authorities": [
+        {
+            "authority": "ivanov@ssau.ru"
+        }
+    ],
+    "accountNonExpired": true,
+    "credentialsNonExpired": true,
+    "accountNonLocked": true
+}
+```
+
 **Автозаполнение БД:**
 
 GET: /autocomplete/
