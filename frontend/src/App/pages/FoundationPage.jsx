@@ -6,10 +6,29 @@ import {
   Heading,
   Label,
   Pane,
+  Paragraph,
+  Popover,
   TextInputField,
 } from "evergreen-ui";
+import { apiGetClient } from "../../api/api";
+import { useState } from "react";
 
 const FoundationPage = () => {
+  const [clientInfo, setClientInfo] = useState(undefined);
+
+  const queryParams = new URLSearchParams(window.location.search);
+  const clientId = queryParams.get("clientId");
+
+  const getClient = (id) => {
+    apiGetClient(id)
+      .then(({ data }) => setClientInfo(data))
+      .catch((err) => console.error(err));
+  };
+
+  const onClientInfoClick = () => {
+    getClient(clientId);
+  };
+
   return (
     <>
       <Header />
@@ -25,7 +44,23 @@ const FoundationPage = () => {
               Фундамент
             </Heading>
 
-            <Button marginTop={12}>Информация о клиенте</Button>
+            <Popover
+              content={
+                <Pane padding={20}>
+                  <Paragraph size={500} fontWeight="bold" marginBottom={16}>
+                    {`${clientInfo.client.lastName} ${clientInfo.client.firstName} ${clientInfo.client.secondName}`}
+                  </Paragraph>
+
+                  <Paragraph>{clientInfo.client.address}</Paragraph>
+                  <Paragraph>{clientInfo.client.phone}</Paragraph>
+                  <Paragraph>{clientInfo.client.email}</Paragraph>
+                </Pane>
+              }
+            >
+              <Button marginTop={12} onClick={onClientInfoClick}>
+                Информация о клиенте
+              </Button>
+            </Popover>
           </Pane>
 
           <TextInputField label="Адрес объекта" width={600} marginBottom={0} />

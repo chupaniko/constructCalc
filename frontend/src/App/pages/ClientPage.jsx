@@ -60,7 +60,9 @@ const ClientPage = () => {
 
           <CalculationCreateDialog
             isShown={isDialogShown}
-            onFoundationCreate={() => navigate("/foundation")}
+            onFoundationCreate={() =>
+              navigate(`/foundation?clientId=${clientInfo.client.id}`)
+            }
             onCloseComplete={() => setIsDialogShown(false)}
           />
         </Pane>
