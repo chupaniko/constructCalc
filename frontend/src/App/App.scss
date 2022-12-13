@@ -4,8 +4,9 @@ html, body, #root {
 }
 
 .app {
+  display: flex;
+  flex-direction: column;
   background: #F0F4F8;
-  overflow: scroll;
 }
 
 .container {
@@ -17,4 +18,8 @@ html, body, #root {
 
 .client-card-link {
   text-decoration: auto;
+}
+
+.input-horizontal {
+  width: 100px !important;
 }
