@@ -1,9 +1,14 @@
 package com.example.constructcalc.calculation.payload;
 
+import com.example.constructcalc.calculation.model.ClientCalculation;
+import com.example.constructcalc.calculation.model.Foundation;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class FoundationResult {
+    private ClientCalculation calculation;
+    private Foundation foundation;
     private List<FoundationElement> elements;
     private double price;
 
@@ -37,5 +42,21 @@ public class FoundationResult {
     public void addElement(FoundationElement foundationElement){
         elements.add(foundationElement);
         price += foundationElement.getPrice();
+    }
+
+    public ClientCalculation getCalculation() {
+        return calculation;
+    }
+
+    public void setCalculation(ClientCalculation calculation) {
+        this.calculation = calculation;
+    }
+
+    public Foundation getFoundation() {
+        return foundation;
+    }
+
+    public void setFoundation(Foundation foundation) {
+        this.foundation = foundation;
     }
 }

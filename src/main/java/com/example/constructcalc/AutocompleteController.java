@@ -105,7 +105,7 @@ public class AutocompleteController {
 
         Material armatura = materialRepository.save(new Material("Арматура"));
         materialCharacteristicRepository.save(new MaterialCharacteristic("", 8, 0, 0, 0, 23, armatura, m));
-        materialCharacteristicRepository.save(new MaterialCharacteristic("", 14, 0, 0, 0, 23, armatura, m));
+        materialCharacteristicRepository.save(new MaterialCharacteristic("", 14, 0, 0, 0, 69, armatura, m));
 
         Material doska = materialRepository.save(new Material("Доска"));
         materialCharacteristicRepository.save(new MaterialCharacteristic("", 30.0, 100.0, 3000.0, 0, 7800, doska, m3));

@@ -57,6 +57,7 @@ public class CalculationController {
         FoundationResult foundationResult = new FoundationResult();
         MaterialCharacteristic concretePiles = materialCharacteristicRepository.findById(foundationRequest.getConcretePiles().getId()).get();
         MaterialCharacteristic concreteMaterial = materialCharacteristicRepository.findById(foundationRequest.getConcrete().getId()).get();
+        foundationResult.setCalculation(calculation);
 
         Foundation foundation;
         boolean isEdit = false;
@@ -71,6 +72,8 @@ public class CalculationController {
             isEdit = true;
             results = resultRepository.findByCalculationAndElementType(calculation, "F");
         }
+
+        foundationResult.setFoundation(foundation);
 
         //сваи
         FoundationElement piles;
@@ -121,7 +124,7 @@ public class CalculationController {
         if (isEdit)
             armatura2 = updateCalculationResult(results, "Арматура 2", armaturaCount2, armaturaPrice2);
         else
-            armatura2 = new CalculationResult("Арматура 2", armaturaMaterial1, calculation, armaturaCount2, armaturaPrice1, "F");
+            armatura2 = new CalculationResult("Арматура 2", armaturaMaterial2, calculation, armaturaCount2, armaturaPrice2, "F");
         resultRepository.save(armatura2);
         rostverk.addFoundationMaterialElement(armatura2);
         rostverk.setName("Ростверк");
