@@ -5,6 +5,7 @@ import AuthPage from "./pages/AuthPage";
 import ClientsPage from "./pages/ClientsPage";
 import ClientPage from "./pages/ClientPage";
 import FoundationPage from "./pages/FoundationPage";
+import ResultPage from "./pages/ResultPage";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
       <Route path="/clients" element={<ClientsPage />} />
       <Route path="/clients/:id" element={<ClientPage />} />
       <Route path="/foundation" element={<FoundationPage />} />
+      <Route path="/result/:id" element={<ResultPage />} />
     </Routes>
   );
 }

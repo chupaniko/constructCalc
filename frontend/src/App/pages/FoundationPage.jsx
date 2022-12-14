@@ -18,6 +18,7 @@ import {
   apiGetFoundationCalculation,
 } from "../../api/api";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 
 const FoundationPage = () => {
   const [clientInfo, setClientInfo] = useState(undefined);
@@ -33,6 +34,8 @@ const FoundationPage = () => {
 
   const queryParams = new URLSearchParams(window.location.search);
   const clientId = queryParams.get("clientId");
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     apiGetConcreteValues().then(({ data }) => {
@@ -110,7 +113,9 @@ const FoundationPage = () => {
       // },
     });
 
-    apiGetFoundationCalculation(json).then(({ data }) => console.log(data));
+    apiGetFoundationCalculation(json).then(({ data }) => {
+      navigate(`/result/${data.calculation.id}`);
+    });
   };
 
   return (
