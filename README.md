@@ -130,5 +130,5 @@ Body:
 ```
 **Получить уже посчитанные данные фундамента по id расчета**
 
-GET: api/calculation//getFoundationResults/{calculationId}
+GET: api/calculation/getFoundationResults/{calculationId}
 
