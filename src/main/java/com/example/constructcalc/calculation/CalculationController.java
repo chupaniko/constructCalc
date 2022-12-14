@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
@@ -186,6 +187,56 @@ public class CalculationController {
         return new ResponseEntity<>(foundationRepository.findByCalculation(clientCalculationRepository.findById(calculationId).get()).get(0), HttpStatus.OK);
     }
 
+    @GetMapping("/getFoundationResults/{calculationId}")
+    public ResponseEntity<FoundationResult> getFoundationResults(@PathVariable(name = "calculationId") long calculationId)
+    {
+        Optional<ClientCalculation> calculationOptional = clientCalculationRepository.findById(calculationId);
+        if (calculationOptional.isEmpty())
+            return ResponseEntity.notFound().build();
+
+        ClientCalculation calculation = calculationOptional.get();
+        Foundation foundation = foundationRepository.findByCalculation(calculation).get(0);
+
+        FoundationResult foundationResult = new FoundationResult();
+        foundationResult.setCalculation(calculation);
+        foundationResult.setFoundation(foundation);
+
+        List<CalculationResult> results = resultRepository.findByCalculationAndElementType(calculation, "F");
+
+        results.stream().map(x -> x.getName()).forEach(System.out::println);
+
+        if (results.isEmpty())
+            return ResponseEntity.notFound().build();
+
+        //сваи
+        FoundationElement piles = new FoundationElement();
+        piles.setName("Сваи");
+        piles.addFoundationMaterialElement(findCalculationResult(results, "Количество свай"));
+        foundationResult.addElement(piles);
+
+        //ростверк
+        FoundationElement rostverk = new FoundationElement();
+        rostverk.setName("Ростверк");
+        CalculationResult beton = findCalculationResult(results, "Бетон");
+        rostverk.addFoundationMaterialElement(beton);
+        CalculationResult armatura1 = findCalculationResult(results, "Арматура 1");
+        rostverk.addFoundationMaterialElement(armatura1);
+        CalculationResult armatura2 = findCalculationResult(results, "Арматура 2");
+        rostverk.addFoundationMaterialElement(armatura2);
+
+        foundationResult.addElement(rostverk);
+
+        //Опалубка
+        FoundationElement opalubka = new FoundationElement();
+        opalubka.setName("Опалубка");
+        opalubka.addFoundationMaterialElement(findCalculationResult(results, "Доска"));
+        opalubka.addFoundationMaterialElement(findCalculationResult(results, "Брус"));
+
+        foundationResult.addElement(opalubka);
+
+        return new ResponseEntity<>(foundationResult, HttpStatus.OK);
+    }
+
     @DeleteMapping("/deleteCalculation/{id}")
     public ResponseEntity<List<ClientCalculation>> deleteCalculation(@PathVariable(name = "id") long calculationId){
         ClientCalculation calculation = clientCalculationRepository.findById(calculationId).get();
@@ -206,5 +257,9 @@ public class CalculationController {
         result.setPrice(price);
 
         return result;
+    }
+
+    private CalculationResult findCalculationResult(List<CalculationResult> results, String name){
+        return results.stream().filter(x -> x.getName().equals(name)).collect(Collectors.toList()).get(0);
     }
 }
