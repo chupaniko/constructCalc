@@ -93,11 +93,11 @@ GET: api/calculation/getBetonPilesValues
 
 **Получить текущие параметры фундамента по расчету**
 
-GET: /getFoundationByCalculation/{id}
+GET: api/calculation/getFoundationByCalculation/{id}
 
 **Удалить расчет**
 
-DELETE: /deleteCalculation/{id}
+DELETE: api/calculation/deleteCalculation/{id}
 
 **Расчет фундамента**
 
@@ -128,4 +128,7 @@ Body:
    }
 }
 ```
+**Получить уже посчитанные данные фундамента по id расчета**
+
+GET: api/calculation//getFoundationResults/{calculationId}
 
