@@ -39,3 +39,7 @@ export const apiGetFoundationCalculation = (data) => {
 export const apiGetFoundationByCalculation = (id) => {
   return instance.get(`/calculation/getFoundationByCalculation/${id}`);
 };
+
+export const apiGetFoundationResults = (id) => {
+  return instance.get(`/calculation/getFoundationResults/${id}`);
+};
