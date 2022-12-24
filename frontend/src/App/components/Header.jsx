@@ -12,13 +12,12 @@ const Header = () => {
           paddingY={16}
         >
           <Pane display="flex" alignItems="center">
-            <Pane>Arrow</Pane>
 
             <Pane display="flex" alignItems="center">
               <img src={logo} alt="Logo" height={60} />
 
               <Heading is="h1" className="title" fontSize={28} fontWeight={700}>
-                Название
+                НеСтройСам
               </Heading>
             </Pane>
           </Pane>
