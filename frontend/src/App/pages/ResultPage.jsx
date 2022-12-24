@@ -52,7 +52,7 @@ const ResultPage = () => {
                 {calculationResult?.elements?.map((e, index) => (
                     <div key={index}>
                       <Table.Row background="rgba(222, 222, 222, 0.29)">
-                        <Table.TextCell flex={5}>{e.name}</Table.TextCell>
+                        <Table.TextCell flex={5}><b style={{fontSize:'14px'}}>{e.name}</b></Table.TextCell>
                         <Table.TextCell>{e.price}</Table.TextCell>
                       </Table.Row>
 
